@@ -16,18 +16,35 @@ canvas {
 	position: absolute;
 }
 
-.toggle-btn {
+.actions {
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	display: flex;
+	flex-direction: column;
+}
+
+.action-button {
 	padding: 10px;
 	text-align: center;
-	position: absolute;
 	border: 1px solid;
 	cursor: pointer;
 	background: transparent;
 	color: white;
-	right: 10px;
-	top: 10px;
+	z-index: 2;
+	margin: 5px;
+	box-sizing: border-box;
 }
 
-.toggle-btn:focus {
+.action-button:focus {
 	outline: none;
 }
+
+/* svg {
+	width: 100vw !important;
+	height: 100vh !important;
+}
+
+svg > g {
+	transform: scale(1) !important;
+} */

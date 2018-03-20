@@ -1,7 +1,7 @@
-let pieces, radius, fft, analyzer, mapMouseX, mapMouseY, audio, toggleBtn, uploadBtn, uploadedAudio, bass, treble, mid
-// let colorPalette = ["#F2E58E", "#65B5C2", "#E98176", "#E98176"]
-// let colorPalette = ["#65B5C2", "#E98176", "#F2E58E", "#F2E58E"]
-let colorPalette = ["#E98176", "#65B5C2", "#F2E58E", "#F2E58E"]
+let pieces, radius, fft, analyzer, mapMouseX, mapMouseY, audio, bass, treble, mid
+let colors = ["#E98176", "#65B5C2", "#F2E58E", "#F2E58E"]
+let svg = false
+const actions = document.querySelector('.actions')
 
 preload = () => {
 	audio = loadSound("audio/decouverte_machu_picchu.mp3")
@@ -9,14 +9,10 @@ preload = () => {
 
 setup = () => {
 
-	// createCanvas(windowWidth, windowHeight, SVG)
 	createCanvas(windowWidth, windowHeight)
 
-	toggleBtn = createButton("Play / Pause")
-
-	toggleBtn.addClass("toggle-btn")
-
-	toggleBtn.mousePressed(toggleAudio)
+	const captureAnimationButton = document.querySelector('#capture-animation')
+	captureAnimationButton.addEventListener('click', () => captureAnimation())
 
 	analyzer = new p5.Amplitude()
 	fft = new p5.FFT()
@@ -24,10 +20,28 @@ setup = () => {
 
 }
 
-
 draw = () => {
+	audio.isPlaying() && generate()
+}
 
-	background(colorPalette[0])
+drawSVG = () => {
+
+	createCanvas(windowWidth, windowHeight, SVG)
+
+	const createdSVG = document.querySelector('svg')
+	createdSVG.style.width = windowWidth
+	createdSVG.style.height = windowHeight
+
+	const scale = document.querySelector('svg > g')
+	scale.style.transform='scale(1)'
+
+	generate(true)
+
+}
+
+generate = (isSVG = false) => {
+
+	background(colors[0])
 
 	translate(windowWidth / 2, windowHeight / 2)
 
@@ -59,11 +73,11 @@ draw = () => {
 	for (i = 0; i < pieces; i += 0.1) {
 
 		rotate(TWO_PI / (pieces / 2))
-
 		noFill()
+
 		// BASS
 		push()
-		stroke(colorPalette[1])
+		stroke(colors[1])
 		audio.isPlaying() && rotate(frameCount * 0.002)
 		strokeWeight(0.5)
 		polygon(mapbass + i, mapbass - i, mapMouseXbass * i, 3)
@@ -72,7 +86,7 @@ draw = () => {
 
 		// MID
 		push()
-		stroke(colorPalette[2])
+		stroke(colors[2])
 		strokeWeight(0.2)
 		polygon(mapMid - i*i, mapMid + i*i, mapMouseX - i*i, 3)
 		pop()
@@ -80,7 +94,7 @@ draw = () => {
 
 		// TREMBLE
 		push()
-		stroke(colorPalette[3])
+		stroke(colors[3])
 		strokeWeight(0.6)
 		scale(mouseX * 0.0005)
 		audio.isPlaying() && rotate((mouseX * 0.002))
@@ -89,25 +103,64 @@ draw = () => {
 
 	}
 
+	if (isSVG === true) {
+		noLoop()
+		// save('Axidraw.svg')
+	}
+
 }
 
+keyPressed = () => {
+  if (keyCode === 32 && svg === false) {
+    captureAnimation()
+  }
+}
 
-toggleAudio = () => {
+captureAnimation = () => {
 
+	svg = true
 	level = analyzer.getLevel()
 	fft.analyze()
+
 	if (audio.isPlaying()) {
 		bass = fft.getEnergy(100, 150)
 		treble = fft.getEnergy(150, 250)
 		mid = fft.getEnergy("mid")
 	}
-	audio.isPlaying() ? audio.pause() : audio.play()
+
+	document.querySelector('#capture-animation').remove()
+
+	const uploadButton = document.createElement("button")
+	uploadButton.className = 'action-button'
+	uploadButton.innerHTML = 'Télécharger'
+	actions.appendChild(uploadButton)
+	uploadButton.addEventListener('click', () => uploadSVG())
+
+	const retryButton = document.createElement("button")
+	retryButton.className = 'action-button'
+	retryButton.innerHTML = 'Recommencer'
+	actions.appendChild(retryButton)
+	retryButton.addEventListener('click', () => reload())
+
+	// uploadButton = createButton("Télécharger")
+	// uploadButton.addClass("action-button")
+	// uploadButton.mousePressed(uploadSVG)
+
+	// retryButton = createButton("Recommencer")
+	// retryButton.addClass("action-button")
+	// retryButton.mousePressed(reload)
+
+	audio.pause()
+	drawSVG()
 
 }
 
+reload = () => {
+	window.location.reload()
+}
 
-windowResized = () => {
-	resizeCanvas(windowWidth, windowHeight)
+uploadSVG = () => {
+	save('Axidraw.svg')
 }
 
 polygon = (x, y, radius, npoints) => {
