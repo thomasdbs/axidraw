@@ -1,7 +1,42 @@
+//VARIABLES POUR CALCULS
 let pieces, radius, fft, analyzer, mapMouseX, mapMouseY, audio, bass, treble, mid
-let colors = ["#E98176", "#65B5C2", "#F2E58E", "#F2E58E"]
-let svg = false
+
+//COULEURS
+const white = '#FFFFFF'
+let bgColor = '#E98176'
+let polygonsColor = '#65B5C2'
+let linesColor = '#F2E58E'
+
+
+//ELEMENTS DU DOM
 const actions = document.querySelector('.actions')
+let buttons = document.querySelectorAll('.action-button')
+
+const captureAnimationButton = document.querySelector('#capture-animation')
+captureAnimationButton.addEventListener('click', () => captureAnimation())
+
+const bgButton = document.querySelector('#bg')
+const bgState = document.querySelector('#bg span')
+bgButton.addEventListener('click', () => toggleBg())
+const linesButton = document.querySelector('#lines')
+const linesState = document.querySelector('#lines span')
+linesButton.addEventListener('click', () => toggleLines())
+const polygonsButton = document.querySelector('#polygons')
+const polygonsState = document.querySelector('#polygons span')
+polygonsButton.addEventListener('click', () => togglePolygons())
+
+const bgInput = document.querySelector('#bg-input input')
+bgInput.addEventListener('change', () => changeBgColor())
+const linesInput = document.querySelector('#lines-input input')
+linesInput.addEventListener('change', () => changeLinesColor())
+const polygonsInput = document.querySelector('#polygons-input input')
+polygonsInput.addEventListener('change', () => changePolygonsColor())
+
+//DONNEES PERSONNALISABLES PAR L'UTILISATEUR
+let choosenBgColor = '#E98176'
+let svg = false
+let lines = true
+let polygons = true
 
 preload = () => {
 	audio = loadSound("audio/decouverte_machu_picchu.mp3")
@@ -11,13 +46,58 @@ setup = () => {
 
 	createCanvas(windowWidth, windowHeight)
 
-	const captureAnimationButton = document.querySelector('#capture-animation')
-	captureAnimationButton.addEventListener('click', () => captureAnimation())
-
 	analyzer = new p5.Amplitude()
 	fft = new p5.FFT()
 	audio.loop()
 
+}
+
+changeBgColor = () => {
+	bgColor = bgInput.value
+	choosenBgColor = bgInput.value
+}
+
+changeLinesColor = () => {
+	linesColor = linesInput.value
+}
+
+changePolygonsColor = () => {
+	polygonsColor = polygonsInput.value
+}
+
+toggleBg = () => {
+	buttons.forEach( (button) => {
+		button.classList.toggle('pink')
+	})
+	document.querySelector('#bg-input').classList.toggle('none')
+
+	if(choosenBgColor === white) {
+		choosenBgColor = bgColor
+		bgState.innerHTML = 'OK'
+	}else {
+		choosenBgColor = white
+		bgState.innerHTML = 'KO'
+	}
+}
+
+toggleLines = () => {
+	document.querySelector('#lines-input').classList.toggle('none')
+	lines = !lines
+	if(linesState.innerHTML === 'KO') {
+		linesState.innerHTML = 'OK'
+	}else {
+		linesState.innerHTML = 'KO'
+	}
+}
+
+togglePolygons = () => {
+	document.querySelector('#polygons-input').classList.toggle('none')
+	polygons = !polygons
+	if(polygonsState.innerHTML === 'KO') {
+		polygonsState.innerHTML = 'OK'
+	}else {
+		polygonsState.innerHTML = 'KO'
+	}
 }
 
 draw = () => {
@@ -41,7 +121,7 @@ drawSVG = () => {
 
 generate = (isSVG = false) => {
 
-	background(colors[0])
+	background(choosenBgColor)
 
 	translate(windowWidth / 2, windowHeight / 2)
 
@@ -68,52 +148,63 @@ generate = (isSVG = false) => {
 	mapMouseY = map(mouseY, 0, height, 2, 6)
 
 	pieces = 20
-	radius = 100
+	radius = 80
 
 	for (i = 0; i < pieces; i += 0.1) {
 
 		rotate(TWO_PI / (pieces / 2))
 		noFill()
 
-		// BASS
-		push()
-		stroke(colors[1])
-		audio.isPlaying() && rotate(frameCount * 0.002)
-		strokeWeight(0.5)
-		polygon(mapbass + i, mapbass - i, mapMouseXbass * i, 3)
-		pop()
+		if (polygons === true) {
 
+			// BASS
+			push()
+			stroke(polygonsColor)
+			audio.isPlaying() && rotate(frameCount * 0.002)
+			strokeWeight(0.5)
+			polygon(mapbass + i, mapbass - i, mapMouseXbass * i, 3)
+			pop()
 
-		// MID
-		push()
-		stroke(colors[2])
-		strokeWeight(0.2)
-		polygon(mapMid - i*i, mapMid + i*i, mapMouseX - i*i, 3)
-		pop()
+		}
 
+		if (lines === true) {
 
-		// TREMBLE
-		push()
-		stroke(colors[3])
-		strokeWeight(0.6)
-		scale(mouseX * 0.0005)
-		audio.isPlaying() && rotate((mouseX * 0.002))
-		polygon(mapTreble + i / 2, mapTreble - i / 2, mapMouseY * i / 2, 3)
-		pop()
+			// MID
+			push()
+			stroke(linesColor)
+			strokeWeight(0.2)
+			polygon(mapMid - i*i, mapMid + i*i, mapMouseX - i*i, 3)
+			pop()
+
+			// TREMBLE
+
+			if (i%2 === 0) {
+				push()
+				stroke(linesColor)
+				strokeWeight(1.6)
+				scale(0.2)
+				audio.isPlaying() && rotate((mouseX * 0.002))
+				polygon(mapTreble + i / 2, mapTreble - i / 2, mapMouseY/2 * i / 2, 3)
+				pop()
+			}
+
+		}
 
 	}
 
 	if (isSVG === true) {
 		noLoop()
-		// save('Axidraw.svg')
 	}
 
 }
 
 keyPressed = () => {
-  if (keyCode === 32 && svg === false) {
-    captureAnimation()
-  }
+	(keyCode === 32) && (
+		(svg === false) ?
+		captureAnimation()
+		:
+		reload()
+	)
 }
 
 captureAnimation = () => {
@@ -128,27 +219,33 @@ captureAnimation = () => {
 		mid = fft.getEnergy("mid")
 	}
 
-	document.querySelector('#capture-animation').remove()
+	captureAnimationButton.remove()
+	bgButton.remove()
+	linesButton.remove()
+	polygonsButton.remove()
+	bgInput.remove()
+	linesInput.remove()
+	polygonsColor.remove()
 
 	const uploadButton = document.createElement("button")
-	uploadButton.className = 'action-button'
+	if (choosenBgColor === white) {
+		uploadButton.className = 'action-button pink'
+	}else {
+		uploadButton.className = 'action-button'
+	}
 	uploadButton.innerHTML = 'Télécharger'
 	actions.appendChild(uploadButton)
 	uploadButton.addEventListener('click', () => uploadSVG())
 
 	const retryButton = document.createElement("button")
-	retryButton.className = 'action-button'
+	if (choosenBgColor === white) {
+		retryButton.className = 'action-button pink'
+	}else {
+		retryButton.className = 'action-button'
+	}
 	retryButton.innerHTML = 'Recommencer'
 	actions.appendChild(retryButton)
 	retryButton.addEventListener('click', () => reload())
-
-	// uploadButton = createButton("Télécharger")
-	// uploadButton.addClass("action-button")
-	// uploadButton.mousePressed(uploadSVG)
-
-	// retryButton = createButton("Recommencer")
-	// retryButton.addClass("action-button")
-	// retryButton.mousePressed(reload)
 
 	audio.pause()
 	drawSVG()

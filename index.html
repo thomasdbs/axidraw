@@ -8,7 +8,26 @@
 <body>
 
   <div class="actions">
-    <button type="button" name="button" id="capture-animation" class="action-button">Capturer l'instant</button>
+    <button type="button" name="button" id="capture-animation" class="action-button">Capture</button>
+    <button type="button" name="button" id="bg" class="action-button">Background : <span>OK</span></button>
+    <button type="button" name="button" id="lines" class="action-button">Lines : <span>OK</span></button>
+    <button type="button" name="button" id="polygons" class="action-button">Polygons : <span>OK</span></button>
+
+    <label class="action-button" id="bg-input">
+      Background Color
+      <input type="color" class="hidden" value="#E98176">
+    </label>
+
+    <label class="action-button" id="lines-input">
+      Lines Color
+      <input type="color" class="hidden" value="#F2E58E">
+    </label>
+
+    <label class="action-button" id="polygons-input">
+      Polygons Color
+      <input type="color" class="hidden" value="#65B5C2">
+    </label>
+
   </div>
 
   <script src="js/p5/p5.min.js"></script>
@@ -16,6 +35,6 @@
   <script src="js/p5/addons/p5.svg.js"></script>
   <script src="js/p5/addons/p5.sound.min.js"></script>
   <script src="js/main.js"></script>
-  
+
 </body>
 </html>
