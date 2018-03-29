@@ -11,7 +11,8 @@ let linesColor = '#F2E58E'
 //ELEMENTS DU DOM
 const body = document.querySelector('body')
 const actions = document.querySelector('.actions')
-let buttons = document.querySelectorAll('.action-button')
+const buttons = document.querySelectorAll('.action-button')
+const userCircleButtons = document.querySelectorAll('.btn-circle')
 const text = document.querySelectorAll('.white-text')
 const projectDescription = document.querySelector('.project-description')
 const footer = document.querySelector('footer')
@@ -37,14 +38,17 @@ const polygonsState = document.querySelector('#polygons span')
 polygonsButton.addEventListener('click', () => togglePolygons())
 
 const bgInput = document.querySelector('#bg-input input')
-bgInput.addEventListener('change', () => changeBgColor())
+const bgInputLabel = document.querySelector('#bg-input')
+bgInput.addEventListener('change', () => changeBgColor(bgInput.value))
 const linesInput = document.querySelector('#lines-input input')
+const linesInputLabel = document.querySelector('#lines-input')
 linesInput.addEventListener('change', () => changeLinesColor())
 const polygonsInput = document.querySelector('#polygons-input input')
+const polygonsInputLabel = document.querySelector('#polygons-input')
 polygonsInput.addEventListener('change', () => changePolygonsColor())
 
 //DONNEES PERSONNALISABLES PAR L'UTILISATEUR
-let choosenBgColor = '#E98176'
+let chosenBgColor = '#E98176'
 let svg = false
 let lines = true
 let polygons = true
@@ -58,9 +62,9 @@ setup = () => {
 
 	const canvas = createCanvas(window.innerWidth, windowHeight)
 	canvas.parent('project')
-	projectDescription.style.backgroundColor = choosenBgColor
-	footer.style.backgroundColor = choosenBgColor
-	body.style.backgroundColor = choosenBgColor
+	projectDescription.style.backgroundColor = chosenBgColor
+	footer.style.backgroundColor = chosenBgColor
+	body.style.backgroundColor = chosenBgColor
 
 	analyzer = new p5.Amplitude()
 	fft = new p5.FFT()
@@ -77,21 +81,23 @@ toggleSound = () => {
 	document.querySelector('#toggle-sound i').classList.toggle('ion-ios-play-outline')
 }
 
-changeBgColor = () => {
+changeBgColor = (value) => {
 
-	bgColor = bgInput.value
-	choosenBgColor = bgInput.value
-	projectDescription.style.backgroundColor = choosenBgColor
-	footer.style.backgroundColor = choosenBgColor
-	body.style.backgroundColor = choosenBgColor
+	bgColor = value
+	chosenBgColor = value
+	projectDescription.style.backgroundColor = chosenBgColor
+	footer.style.backgroundColor = chosenBgColor
+	body.style.backgroundColor = chosenBgColor
 
-	if (tinycolor(bgInput.value).getBrightness() >= 200) {
+	if (tinycolor(value).getBrightness() >= 200) {
 		body.classList.add('black-text')
 		text.forEach((t) => {t.classList.add('black-text')})
 		buttons.forEach((b) => {b.classList.add('black-button')})
+		userCircleButtons.forEach((b) => {b.classList.add('black-button')})
 	}else {
 		if (body.classList.contains('black-text')) {
 			body.classList.remove('black-text')
+			userCircleButtons.forEach((b) => {b.classList.remove('black-button')})
 			buttons.forEach((b) => {b.classList.remove('black-button')})
 			text.forEach((t) => {t.classList.remove('black-text')})
 		}
@@ -116,10 +122,10 @@ toggleBg = () => {
 
 	document.querySelector('#bg-input').classList.toggle('none')
 
-	if(choosenBgColor === white) {
-		choosenBgColor = bgColor
+	if(chosenBgColor === white) {
+		chosenBgColor = bgColor
 		bgState.innerHTML = 'OK'
-		if (tinycolor(choosenBgColor).getBrightness() < 200) {
+		if (tinycolor(chosenBgColor).getBrightness() < 200) {
 			buttons.forEach( (button) => {
 				button.classList.remove('black-button')
 			})
@@ -128,9 +134,12 @@ toggleBg = () => {
 		buttons.forEach( (button) => {
 			button.classList.add('black-button')
 		})
-		choosenBgColor = white
+		chosenBgColor = white
 		bgState.innerHTML = 'KO'
 	}
+
+	changeBgColor(chosenBgColor)
+
 }
 
 toggleLines = () => {
@@ -160,6 +169,10 @@ draw = () => {
 drawSVG = () => {
 
 	createCanvas(window.innerWidth, windowHeight, SVG)
+	// svg.parent('project')
+	// createCanvas(window.innerWidth, windowHeight, SVG)
+	document.querySelector('#project').appendChild(document.querySelector('#defaultCanvas0'));
+
 
 	const createdSVG = document.querySelector('svg')
 	createdSVG.style.width = window.innerWidth
@@ -174,7 +187,7 @@ drawSVG = () => {
 
 generate = (isSVG = false) => {
 
-	background(choosenBgColor)
+	background(chosenBgColor)
 
 	translate(window.innerWidth / 2, windowHeight / 2)
 
@@ -276,12 +289,12 @@ captureAnimation = () => {
 	bgButton.remove()
 	linesButton.remove()
 	polygonsButton.remove()
-	bgInput.remove()
-	linesInput.remove()
-	polygonsColor.remove()
+	bgInputLabel.remove()
+	linesInputLabel.remove()
+	polygonsInputLabel.remove()
 
 	const uploadButton = document.createElement("button")
-	if (choosenBgColor === white) {
+	if (chosenBgColor === white) {
 		uploadButton.className = 'action-button black-button'
 	}else {
 		uploadButton.className = 'action-button'
@@ -291,7 +304,7 @@ captureAnimation = () => {
 	uploadButton.addEventListener('click', () => uploadSVG())
 
 	const retryButton = document.createElement("button")
-	if (choosenBgColor === white) {
+	if (chosenBgColor === white) {
 		retryButton.className = 'action-button black-button'
 	}else {
 		retryButton.className = 'action-button'
