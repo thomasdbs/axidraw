@@ -94,7 +94,14 @@ changeSlide = (direction) => {
 		}
 	}
 	current.classList.remove('current')
-	document.querySelector(`.slide[data-slide='${slideNumber}']`).classList.add('current')
+	setTimeout( () => {
+		current.classList.add('none')
+		document.querySelector(`.slide[data-slide='${slideNumber}']`).classList.remove('none')
+	}, 500)
+	setTimeout( () => {
+		document.querySelector(`.slide[data-slide='${slideNumber}']`).classList.add('current')
+	}, 600)
+
 }
 
 toggleSound = () => {
