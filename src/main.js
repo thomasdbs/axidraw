@@ -14,7 +14,7 @@ const actions = document.querySelector('.actions')
 const buttons = document.querySelectorAll('.action-button')
 const userCircleButtons = document.querySelectorAll('.btn-circle')
 const text = document.querySelectorAll('.white-text')
-const projectDescription = document.querySelector('.project-description')
+const projectTitle = document.querySelector('.project-title')
 const footer = document.querySelector('footer')
 
 
@@ -23,6 +23,11 @@ discoverButton.addEventListener('click', () => scrollToProject())
 
 const soundButton = document.querySelector('#toggle-sound')
 soundButton.addEventListener('click', () => toggleSound())
+
+const slideRight = document.querySelector('#slide-right')
+slideRight.addEventListener('click', () => changeSlide('next'))
+const slideLeft = document.querySelector('#slide-left')
+slideLeft.addEventListener('click', () => changeSlide('prev'))
 
 const captureAnimationButton = document.querySelector('#capture-animation')
 captureAnimationButton.addEventListener('click', () => captureAnimation())
@@ -39,7 +44,7 @@ polygonsButton.addEventListener('click', () => togglePolygons())
 
 const bgInput = document.querySelector('#bg-input input')
 const bgInputLabel = document.querySelector('#bg-input')
-bgInput.addEventListener('change', () => changeBgColor(bgInput.value))
+bgInput.addEventListener('change', () => changeBgColor(bgInput.value, true))
 const linesInput = document.querySelector('#lines-input input')
 const linesInputLabel = document.querySelector('#lines-input')
 linesInput.addEventListener('change', () => changeLinesColor())
@@ -62,7 +67,7 @@ setup = () => {
 
 	const canvas = createCanvas(window.innerWidth, windowHeight)
 	canvas.parent('project')
-	projectDescription.style.backgroundColor = chosenBgColor
+	projectTitle.style.backgroundColor = chosenBgColor
 	footer.style.backgroundColor = chosenBgColor
 	body.style.backgroundColor = chosenBgColor
 
@@ -72,6 +77,26 @@ setup = () => {
 
 }
 
+changeSlide = (direction) => {
+	const current = document.querySelector('.slide.current')
+	let slideNumber = parseInt(current.dataset.slide)
+	if (direction === 'next') {
+		if (slideNumber === 4) {
+			slideNumber = 1
+		}else {
+			slideNumber += 1
+		}
+	}else {
+		if (slideNumber === 1) {
+			slideNumber = 4
+		}else {
+			slideNumber -= 1
+		}
+	}
+	current.classList.remove('current')
+	document.querySelector(`.slide[data-slide='${slideNumber}']`).classList.add('current')
+}
+
 toggleSound = () => {
 	if (audio.isPlaying()) {
 		audio.pause()
@@ -79,29 +104,6 @@ toggleSound = () => {
 		audio.play()
 	}
 	document.querySelector('#toggle-sound i').classList.toggle('ion-ios-play-outline')
-}
-
-changeBgColor = (value) => {
-
-	bgColor = value
-	chosenBgColor = value
-	projectDescription.style.backgroundColor = chosenBgColor
-	footer.style.backgroundColor = chosenBgColor
-	body.style.backgroundColor = chosenBgColor
-
-	if (tinycolor(value).getBrightness() >= 200) {
-		body.classList.add('black-text')
-		text.forEach((t) => {t.classList.add('black-text')})
-		buttons.forEach((b) => {b.classList.add('black-button')})
-		userCircleButtons.forEach((b) => {b.classList.add('black-button')})
-	}else {
-		if (body.classList.contains('black-text')) {
-			body.classList.remove('black-text')
-			userCircleButtons.forEach((b) => {b.classList.remove('black-button')})
-			buttons.forEach((b) => {b.classList.remove('black-button')})
-			text.forEach((t) => {t.classList.remove('black-text')})
-		}
-	}
 }
 
 scrollToProject = () => {
@@ -140,6 +142,31 @@ toggleBg = () => {
 
 	changeBgColor(chosenBgColor)
 
+}
+
+changeBgColor = (value, input = false) => {
+
+	if (input === true) {
+		bgColor = value
+	}
+	chosenBgColor = value
+	projectTitle.style.backgroundColor = chosenBgColor
+	footer.style.backgroundColor = chosenBgColor
+	body.style.backgroundColor = chosenBgColor
+
+	if (tinycolor(value).getBrightness() >= 200) {
+		body.classList.add('black-text')
+		text.forEach((t) => {t.classList.add('black-text')})
+		buttons.forEach((b) => {b.classList.add('black-button')})
+		userCircleButtons.forEach((b) => {b.classList.add('black-button')})
+	}else {
+		if (body.classList.contains('black-text')) {
+			body.classList.remove('black-text')
+			userCircleButtons.forEach((b) => {b.classList.remove('black-button')})
+			buttons.forEach((b) => {b.classList.remove('black-button')})
+			text.forEach((t) => {t.classList.remove('black-text')})
+		}
+	}
 }
 
 toggleLines = () => {

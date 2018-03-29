@@ -1,3 +1,5 @@
+/* GENERAL */
+
 @import url('https://fonts.googleapis.com/css?family=Roboto:400');
 *,
 *::after,
@@ -8,10 +10,18 @@
 	outline: none;
 }
 
+
+
+
+/* ICONS SIZE */
 i {
 	font-size: 24px;
 }
 
+
+
+
+/* TOGGLE BLACK AND WHITE TEXT */
 .white-text {
 	color: white;
 	transition: all 0.5s;
@@ -22,7 +32,10 @@ i {
 }
 
 
-.project-description {
+
+
+/* SECTION PROJECT TITLE (TOP OF THE SITE) */
+.project-title {
 	min-height: 100vh;
 	width: 100vw;
 	display: flex;
@@ -31,10 +44,78 @@ i {
 	justify-content: center;
 }
 
-.project-description h1, .project-description p{
+.project-title h1, .project-title p{
 	padding: 10px 20px;
 }
 
+#discover {
+	position: absolute;
+	bottom: 20px;
+	margin-left: auto;
+	margin-right: auto;
+	animation: inmove 2s infinite;
+	transition: all 0.5s;
+}
+
+
+
+
+/* SECTION PROJECT DESCRIPTION */
+.project-description {
+	position: relative;
+}
+
+.project-description .slide {
+	min-height: 100vh;
+	width: 100vw;
+	display: none;
+	padding: 50px 0;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.project-description .slide.current {
+	display: flex;
+}
+
+.project-description .slide .text-content {
+	padding: 0 40px;
+}
+
+.project-description .slide .text-content h2 {
+	margin-bottom: 20px;
+}
+
+.project-description .slide img {
+	height: 80vh;
+	max-width: 100%;
+	box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+	border-top-left-radius: 4px;
+	border-bottom-left-radius: 4px;
+}
+
+.project-description .sliders {
+	position: absolute;
+	right: 18px;
+	bottom: 100px;
+}
+
+.project-description .sliders button {
+	margin: 0 2px;
+	background: white;
+	color: black;
+	transition: all 0.5s;
+	border-color: white;
+}
+
+.project-description .sliders button:hover {
+	background: transparent;
+	color: white;
+}
+
+
+
+/* BUTTONS */
 .fixed {
 	position: fixed !important;
 	top: 20px;
@@ -46,12 +127,6 @@ i {
 	cursor: pointer;
 	background: transparent;
 	color: white;
-	position: absolute;
-	bottom: 20px;
-	margin-left: auto;
-	margin-right: auto;
-	animation: inmove 2s infinite;
-	transition: all 0.5s;
 	text-decoration: none;
 	border: 1px solid white;
 	width: 40px;
@@ -72,15 +147,14 @@ i {
     100% {bottom: 20px;}
 }
 
+
+
+
+
+/* SECTION CANVAS */
 #project {
 	position: relative;
 	height: 100vh;
-}
-
-footer {
-	display: flex;
-	padding: 40px 20px;
-	justify-content: center;
 }
 
 canvas {
@@ -136,4 +210,10 @@ label {
 
 input {
 	outline: none;
+}
+
+footer {
+	display: flex;
+	padding: 40px 20px;
+	justify-content: center;
 }
