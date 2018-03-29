@@ -9,8 +9,19 @@ let linesColor = '#F2E58E'
 
 
 //ELEMENTS DU DOM
+const body = document.querySelector('body')
 const actions = document.querySelector('.actions')
 let buttons = document.querySelectorAll('.action-button')
+const text = document.querySelectorAll('.white-text')
+const projectDescription = document.querySelector('.project-description')
+const footer = document.querySelector('footer')
+
+
+const discoverButton = document.querySelector('#discover')
+discoverButton.addEventListener('click', () => scrollToProject())
+
+const soundButton = document.querySelector('#toggle-sound')
+soundButton.addEventListener('click', () => toggleSound())
 
 const captureAnimationButton = document.querySelector('#capture-animation')
 captureAnimationButton.addEventListener('click', () => captureAnimation())
@@ -38,13 +49,18 @@ let svg = false
 let lines = true
 let polygons = true
 
+
 preload = () => {
 	audio = loadSound("audio/decouverte_machu_picchu.mp3")
 }
 
 setup = () => {
 
-	createCanvas(windowWidth, windowHeight)
+	const canvas = createCanvas(window.innerWidth, windowHeight)
+	canvas.parent('project')
+	projectDescription.style.backgroundColor = choosenBgColor
+	footer.style.backgroundColor = choosenBgColor
+	body.style.backgroundColor = choosenBgColor
 
 	analyzer = new p5.Amplitude()
 	fft = new p5.FFT()
@@ -52,9 +68,40 @@ setup = () => {
 
 }
 
+toggleSound = () => {
+	if (audio.isPlaying()) {
+		audio.pause()
+	}else {
+		audio.play()
+	}
+	document.querySelector('#toggle-sound i').classList.toggle('ion-ios-play-outline')
+}
+
 changeBgColor = () => {
+
 	bgColor = bgInput.value
 	choosenBgColor = bgInput.value
+	projectDescription.style.backgroundColor = choosenBgColor
+	footer.style.backgroundColor = choosenBgColor
+	body.style.backgroundColor = choosenBgColor
+
+	if (tinycolor(bgInput.value).getBrightness() >= 200) {
+		body.classList.add('black-text')
+		text.forEach((t) => {t.classList.add('black-text')})
+		buttons.forEach((b) => {b.classList.add('black-button')})
+	}else {
+		if (body.classList.contains('black-text')) {
+			body.classList.remove('black-text')
+			buttons.forEach((b) => {b.classList.remove('black-button')})
+			text.forEach((t) => {t.classList.remove('black-text')})
+		}
+	}
+}
+
+scrollToProject = () => {
+	document.querySelector('#project').scrollIntoView({
+		behavior: 'smooth'
+	})
 }
 
 changeLinesColor = () => {
@@ -66,15 +113,21 @@ changePolygonsColor = () => {
 }
 
 toggleBg = () => {
-	buttons.forEach( (button) => {
-		button.classList.toggle('pink')
-	})
+
 	document.querySelector('#bg-input').classList.toggle('none')
 
 	if(choosenBgColor === white) {
 		choosenBgColor = bgColor
 		bgState.innerHTML = 'OK'
+		if (tinycolor(choosenBgColor).getBrightness() < 200) {
+			buttons.forEach( (button) => {
+				button.classList.remove('black-button')
+			})
+		}
 	}else {
+		buttons.forEach( (button) => {
+			button.classList.add('black-button')
+		})
 		choosenBgColor = white
 		bgState.innerHTML = 'KO'
 	}
@@ -106,10 +159,10 @@ draw = () => {
 
 drawSVG = () => {
 
-	createCanvas(windowWidth, windowHeight, SVG)
+	createCanvas(window.innerWidth, windowHeight, SVG)
 
 	const createdSVG = document.querySelector('svg')
-	createdSVG.style.width = windowWidth
+	createdSVG.style.width = window.innerWidth
 	createdSVG.style.height = windowHeight
 
 	const scale = document.querySelector('svg > g')
@@ -123,7 +176,7 @@ generate = (isSVG = false) => {
 
 	background(choosenBgColor)
 
-	translate(windowWidth / 2, windowHeight / 2)
+	translate(window.innerWidth / 2, windowHeight / 2)
 
 	level = analyzer.getLevel()
 	fft.analyze()
@@ -229,7 +282,7 @@ captureAnimation = () => {
 
 	const uploadButton = document.createElement("button")
 	if (choosenBgColor === white) {
-		uploadButton.className = 'action-button pink'
+		uploadButton.className = 'action-button black-button'
 	}else {
 		uploadButton.className = 'action-button'
 	}
@@ -239,7 +292,7 @@ captureAnimation = () => {
 
 	const retryButton = document.createElement("button")
 	if (choosenBgColor === white) {
-		retryButton.className = 'action-button pink'
+		retryButton.className = 'action-button black-button'
 	}else {
 		retryButton.className = 'action-button'
 	}

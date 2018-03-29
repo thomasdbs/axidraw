@@ -3,12 +3,84 @@
 *::after,
 *::before {
 	box-sizing: border-box;
+	font-family: 'Roboto', sans-serif;
+	margin: 0;
+	outline: none;
 }
 
-body {
-	font-family: 'Roboto', sans-serif;
-	color: #fff;
-	margin: 0;
+i {
+	font-size: 24px;
+}
+
+.white-text {
+	color: white;
+	transition: all 0.5s;
+}
+
+.black-text {
+	color: black !important;
+}
+
+
+.project-description {
+	min-height: 100vh;
+	width: 100vw;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.project-description h1, .project-description p{
+	padding: 10px 20px;
+}
+
+.fixed {
+	position: fixed !important;
+	top: 20px;
+	left: 20px;
+}
+
+.btn-circle {
+	text-align: center;
+	cursor: pointer;
+	background: transparent;
+	color: white;
+	position: absolute;
+	bottom: 20px;
+	margin-left: auto;
+	margin-right: auto;
+	animation: inmove 2s infinite;
+	transition: all 0.5s;
+	text-decoration: none;
+	border: 1px solid white;
+	width: 40px;
+	height: 40px;
+	padding-top: 4px;
+	border-radius: 50%;
+	z-index: 2;
+}
+
+.btn-circle:hover {
+	background: white;
+	color: black;
+}
+
+@keyframes inmove {
+    0%   {bottom: 20px;}
+    50%  {bottom: 30px;}
+    100% {bottom: 20px;}
+}
+
+#project {
+	position: relative;
+	height: 100vh;
+}
+
+footer {
+	display: flex;
+	padding: 40px 20px;
+	justify-content: center;
 }
 
 canvas {
@@ -21,6 +93,7 @@ canvas {
 	top: 10px;
 	display: flex;
 	flex-direction: column;
+	z-index: 2;
 }
 
 .action-button {
@@ -40,7 +113,7 @@ canvas {
 	outline: none;
 }
 
-.pink {
+.black-button {
 	border-color: black;
 	color: black;
 }
