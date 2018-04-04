@@ -85,6 +85,7 @@ i {
 
 .project-description .slide .text-content {
 	padding: 0 40px;
+	min-height: 80vh;
 }
 
 .project-description .slide .text-content h2 {
@@ -244,6 +245,7 @@ footer {
 		padding: 20px 10px;
 		width: 100%;
 		text-align: center;
+		min-height: auto;
 	}
 
 	.project-description .sliders {
