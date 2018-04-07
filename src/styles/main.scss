@@ -44,20 +44,29 @@ i {
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+
+	h1, p {
+		padding: 10px 20px;
+	}
+
+	#discover {
+		position: absolute;
+		bottom: 20px;
+		margin-left: auto;
+		margin-right: auto;
+		animation: inmove 2s infinite;
+		transition: all 0.5s;
+	}
+
 }
 
-.project-title h1, .project-title p{
-	padding: 10px 20px;
+@keyframes inmove {
+    0%   {bottom: 20px;}
+    50%  {bottom: 30px;}
+    100% {bottom: 20px;}
 }
 
-#discover {
-	position: absolute;
-	bottom: 20px;
-	margin-left: auto;
-	margin-right: auto;
-	animation: inmove 2s infinite;
-	transition: all 0.5s;
-}
+
 
 
 
@@ -66,62 +75,97 @@ i {
 .project-description {
 	position: relative;
 	padding: 100px 0;
-}
 
-.project-description .slide {
-	min-height: 100vh;
-	width: 100vw;
-	padding: 50px 0;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	transition: all 0.5s;
-	opacity: 0;
-}
+	.sliders {
+		position: absolute;
+		right: 18px;
+		bottom: 200px;
 
-.project-description .slide.current {
-	opacity: 1;
-}
+		@media(max-width: 1000px) {
+			top: 50%;
+			bottom: auto;
+			left: 10px;
+			right: 10px;
+			margin-left: auto;
+			margin-right: auto;
+			text-align: center;
+			display: flex;
+			justify-content: space-between;
+		}
 
-.project-description .slide .text-content {
-	padding: 0 40px;
-	min-height: 80vh;
-}
+		button {
+			margin: 0 2px;
+			background: white;
+			color: black;
+			transition: all 0.5s;
+			border-color: white;
 
-.project-description .slide .text-content h2 {
-	margin-bottom: 20px;
-}
+			&:hover {
+				background: transparent;
+				color: white;
+			}
 
-.project-description .slide img {
-	height: 0;
-	max-width: 100%;
-	box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
-	border-top-left-radius: 4px;
-	border-bottom-left-radius: 4px;
-	transition: all 0.5s;
-}
+		}
 
-.project-description .current img {
-	height: 80vh;
-}
+	}
 
-.project-description .sliders {
-	position: absolute;
-	right: 18px;
-	bottom: 200px;
-}
+	.slide {
+		min-height: 100vh;
+		width: 100vw;
+		padding: 50px 0;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		transition: all 0.5s;
+		opacity: 0;
 
-.project-description .sliders button {
-	margin: 0 2px;
-	background: white;
-	color: black;
-	transition: all 0.5s;
-	border-color: white;
-}
+		@media(max-width: 1000px) {
+			flex-direction: column-reverse;
+			justify-content: center;
+		}
 
-.project-description .sliders button:hover {
-	background: transparent;
-	color: white;
+		.text-content {
+			padding: 0 40px;
+			min-height: 80vh;
+
+			@media(max-width: 1000px) {
+				padding: 20px 10px;
+				width: 100%;
+				text-align: center;
+				min-height: auto;
+			}
+
+			h2 {
+				margin-bottom: 20px;
+			}
+
+		}
+
+		img {
+			height: 0;
+			max-width: 100%;
+			box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+			border-top-left-radius: 4px;
+			border-bottom-left-radius: 4px;
+			transition: all 0.5s;
+		}
+
+		&.current {
+			opacity: 1;
+
+			img {
+				height: 80vh;
+
+				@media(max-width: 1000px) {
+					height: 50vh;
+				}
+
+			}
+
+		}
+
+	}
+
 }
 
 
@@ -145,17 +189,12 @@ i {
 	padding-top: 4px;
 	border-radius: 50%;
 	z-index: 2;
-}
 
-.btn-circle:hover {
-	background: white;
-	color: black;
-}
+	&:hover {
+		background: white;
+		color: black;
+	}
 
-@keyframes inmove {
-    0%   {bottom: 20px;}
-    50%  {bottom: 30px;}
-    100% {bottom: 20px;}
 }
 
 
@@ -167,37 +206,51 @@ i {
 	position: relative;
 	height: 100vh;
 	overflow: hidden;
+
+	canvas {
+		position: absolute;
+	}
+
+	.actions {
+		position: absolute;
+		right: 10px;
+		top: 10px;
+		display: flex;
+		flex-direction: column;
+		z-index: 2;
+
+		label {
+			font-size: 11px;
+		}
+
+		input {
+			outline: none;
+		}
+
+		.action-button {
+			padding: 10px;
+			text-align: center;
+			border: 1px solid white;
+			cursor: pointer;
+			background: transparent;
+			color: white;
+			z-index: 2;
+			margin: 5px;
+			box-sizing: border-box;
+			transition: all 0.5s;
+
+			&:focus {
+				outline: none;
+			}
+
+		}
+
+	}
+
 }
 
-canvas {
-	position: absolute;
-}
 
-.actions {
-	position: absolute;
-	right: 10px;
-	top: 10px;
-	display: flex;
-	flex-direction: column;
-	z-index: 2;
-}
 
-.action-button {
-	padding: 10px;
-	text-align: center;
-	border: 1px solid white;
-	cursor: pointer;
-	background: transparent;
-	color: white;
-	z-index: 2;
-	margin: 5px;
-	box-sizing: border-box;
-	transition: all 0.5s;
-}
-
-.action-button:focus {
-	outline: none;
-}
 
 .black-button {
 	border-color: black;
@@ -216,48 +269,8 @@ canvas {
 	display: none !important;
 }
 
-label {
-	font-size: 11px;
-}
-
-input {
-	outline: none;
-}
-
 footer {
 	display: flex;
 	padding: 40px 20px;
 	justify-content: center;
-}
-
-@media (max-width:1000px) {
-
-	.project-description .slide {
-		flex-direction: column-reverse;
-		justify-content: center;
-	}
-
-	.project-description .current img {
-		height: 50vh;
-	}
-
-	.project-description .slide .text-content {
-		padding: 20px 10px;
-		width: 100%;
-		text-align: center;
-		min-height: auto;
-	}
-
-	.project-description .sliders {
-		top: 50%;
-		bottom: auto;
-		left: 10px;
-		right: 10px;
-		margin-left: auto;
-		margin-right: auto;
-		text-align: center;
-		display: flex;
-		justify-content: space-between;
-	}
-
 }
