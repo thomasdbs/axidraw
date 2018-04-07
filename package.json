@@ -1,0 +1,31 @@
+{
+  "name": "Axidraw",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "webpack-dev-server",
+    "build": "NODE_ENV=production webpack",
+    "deploy": "git subtree push --prefix dist origin gh-pages"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thomasdbs/axidraw"
+  },
+  "author": "Thomas Dubois",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/thomasdbs/axidraw/issues"
+  },
+  "homepage": "https://github.com/thomasdbs/axidraw#readme",
+  "devDependencies": {
+    "css-loader": "^0.28.11",
+    "file-loader": "^0.11.2",
+    "html-webpack-plugin": "^2.30.1",
+    "node-sass": "^4.8.3",
+    "sass-loader": "^6.0.7",
+    "style-loader": "^0.18.2",
+    "uglifyjs-webpack-plugin": "^1.0.0-beta.2",
+    "webpack": "^3.11.0",
+    "webpack-dev-server": "^2.9.1"
+  }
+}
